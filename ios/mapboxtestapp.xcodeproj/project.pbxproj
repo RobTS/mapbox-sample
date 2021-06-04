@@ -114,7 +114,6 @@
 				614166F0B16E126D253BF10E /* Pods-mapboxtestapp-mapboxtestappTests.debug.xcconfig */,
 				F4F2356FE1E6465B09751DE1 /* Pods-mapboxtestapp-mapboxtestappTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};

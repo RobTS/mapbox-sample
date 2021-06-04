@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   ScrollView,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
@@ -83,10 +82,9 @@ const DraggableMarker = (props: MarkerProps) => {
 };
 
 const App = () => {
-  const isDarkMode = useColorScheme() === 'dark';
   const [points, setPoints] = useState<GeoJSON.Point[]>([]);
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: Colors.lighter,
     flex: 1,
   };
 
@@ -146,9 +144,6 @@ const App = () => {
       <ScrollView style={{flex: 1}}>
         <Text>{JSON.stringify(points, null, 2)}</Text>
         <Button title={'Reset'} onPress={() => setPoints([])} />
-
-        <Image source={Markers.PinBlue} style={{height: 50, width: 50}} />
-        <Image source={Markers.PinGreen} style={{height: 50, width: 50}} />
       </ScrollView>
     </SafeAreaView>
   );
