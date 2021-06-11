@@ -83,6 +83,8 @@ const DraggableMarker = (props: MarkerProps) => {
 
 const App = () => {
   const [points, setPoints] = useState<GeoJSON.Point[]>([]);
+  const [mapVisible, setMapVisible] = useState(true);
+  const [draggable, setDraggable] = useState(false);
   const backgroundStyle = {
     backgroundColor: Colors.lighter,
     flex: 1,
@@ -91,59 +93,82 @@ const App = () => {
   return (
     <SafeAreaView style={backgroundStyle}>
       <View style={{flex: 1}}>
-        <MapboxGL.MapView
-          style={{flex: 1}}
-          onPress={event => {
-            setPoints([...points, event.geometry as GeoJSON.Point]);
-          }}>
-          {points.map((point, index) => {
-            let type: PinType = 'PinBlue';
-            if (index === 0) {
-              type = 'PinGreen';
-            }
-            if (index === points.length - 1) {
-              type = 'PinRed';
-            }
-            return (
-              <WrappedMarker
-                key={index}
-                id={index.toString()}
-                onDragEnd={point => {
-                  setPoints([
-                    ...points.slice(0, index),
-                    point,
-                    ...points.slice(index + 1),
-                  ]);
-                }}
-                coordinate={point}
-                draggable={true}
-                type={type}
-              />
-            );
-          })}
-          {points.length ? (
-            <MapboxGL.ShapeSource
-              id={'shapesource'}
-              shape={{
-                type: 'LineString',
-                coordinates: points.map(point => point.coordinates),
-              }}>
-              <MapboxGL.LineLayer
-                layerIndex={100}
-                id={'line'}
-                style={{
-                  lineColor: '#557000',
-                  lineWidth: 3,
-                  lineOpacity: 0.84,
-                }}
-              />
-            </MapboxGL.ShapeSource>
-          ) : null}
-        </MapboxGL.MapView>
+        {mapVisible ? (
+          <MapboxGL.MapView
+            style={{flex: 1}}
+            onPress={event => {
+              setPoints([...points, event.geometry as GeoJSON.Point]);
+            }}>
+            {points.map((point, index) => {
+              let type: PinType = 'PinBlue';
+              if (index === 0) {
+                type = 'PinGreen';
+              }
+              if (index === points.length - 1) {
+                type = 'PinRed';
+              }
+              return (
+                <WrappedMarker
+                  key={index}
+                  id={index.toString()}
+                  onDragEnd={point => {
+                    setPoints([
+                      ...points.slice(0, index),
+                      point,
+                      ...points.slice(index + 1),
+                    ]);
+                  }}
+                  coordinate={point}
+                  draggable={draggable}
+                  type={type}
+                />
+              );
+            })}
+            {points.length ? (
+              <MapboxGL.ShapeSource
+                id={'shapesource'}
+                shape={{
+                  type: 'LineString',
+                  coordinates: points.map(point => point.coordinates),
+                }}>
+                <MapboxGL.LineLayer
+                  layerIndex={100}
+                  id={'line'}
+                  style={{
+                    lineColor: '#557000',
+                    lineWidth: 3,
+                    lineOpacity: 0.84,
+                  }}
+                />
+              </MapboxGL.ShapeSource>
+            ) : null}
+          </MapboxGL.MapView>
+        ) : null}
       </View>
       <ScrollView style={{flex: 1}}>
-        <Text>{JSON.stringify(points, null, 2)}</Text>
-        <Button title={'Reset'} onPress={() => setPoints([])} />
+        <View style={{margin: 10}}>
+          <Text style={{textAlign: 'center'}}>
+            Tap the map to place markers.
+          </Text>
+        </View>
+        <View style={{margin: 10}}>
+          <Button
+            title={'Toggle map'}
+            onPress={() => setMapVisible(!mapVisible)}
+          />
+        </View>
+        <View style={{margin: 10}}>
+          <Button
+            title={'Toggle draggable'}
+            onPress={() => setDraggable(!draggable)}
+          />
+        </View>
+        <View style={{margin: 10}}>
+          <Button title={'Reset'} onPress={() => setPoints([])} />
+        </View>
+        <View style={{margin: 10}}>
+          <Text>{JSON.stringify(points, null, 2)}</Text>
+        </View>
       </ScrollView>
     </SafeAreaView>
   );
