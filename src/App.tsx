@@ -64,6 +64,9 @@ export const WrappedMarker: React.FC<MarkerProps> = (props: MarkerProps) => {
   );
 };
 
+const lightStyle = 'mapbox://styles/robts/ckmt0kyff3jz817lk0e9yzp1m';
+const satelliteStyle = 'mapbox://styles/robts/ckmt0ph373kj318p1djdmu25i';
+
 const DraggableMarker = (props: MarkerProps) => {
   return (
     <MapboxGL.PointAnnotation
@@ -85,6 +88,7 @@ const App = () => {
   const [points, setPoints] = useState<GeoJSON.Point[]>([]);
   const [mapVisible, setMapVisible] = useState(true);
   const [draggable, setDraggable] = useState(false);
+  const [satStyle, setSatStyle] = useState(false);
   const backgroundStyle = {
     backgroundColor: Colors.lighter,
     flex: 1,
@@ -95,6 +99,7 @@ const App = () => {
       <View style={{flex: 1}}>
         {mapVisible ? (
           <MapboxGL.MapView
+            styleURL={satStyle ? satelliteStyle : lightStyle}
             style={{flex: 1}}
             onPress={event => {
               setPoints([...points, event.geometry as GeoJSON.Point]);
@@ -153,14 +158,20 @@ const App = () => {
         </View>
         <View style={{margin: 10}}>
           <Button
-            title={'Toggle map'}
+            title={`Map visible: ${mapVisible} (press to toggle)`}
             onPress={() => setMapVisible(!mapVisible)}
           />
         </View>
         <View style={{margin: 10}}>
           <Button
-            title={'Toggle draggable'}
+            title={`Draggable: ${draggable} (press to toggle)`}
             onPress={() => setDraggable(!draggable)}
+          />
+        </View>
+        <View style={{margin: 10}}>
+          <Button
+            title={`Map style: ${satStyle ? 'sat' : 'light'} (press to toggle)`}
+            onPress={() => setSatStyle(!satStyle)}
           />
         </View>
         <View style={{margin: 10}}>
